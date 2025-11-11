@@ -9,6 +9,8 @@
   font-family: "Segoe UI", sans-serif;
   color: #ffffff;
   overflow: hidden;
+  height: 100%;
+  width: 100%;
 }
 
 /* Capa semitransparente para oscurecer ligeramente el fondo */
@@ -70,4 +72,9 @@
   background-color: rgba(30, 64, 175, 0.95);
   transform: scale(1.05);
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+#root {
+  height: 100%;
+  width: 100%;
 }

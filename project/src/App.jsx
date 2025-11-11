@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,11 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import "./App.css";
 
 // Importar las páginas
-import ReemplazoEquipos from "./pages/ReemplazoEquipos";
-import ArbolesBinarios from "./pages/ArbolesBinarios";
-import SeriesDeportivas from "./pages/SeriesDeportivas";
-import MultiplicacionMatrices from "./pages/MultiplicacionMatrices";
-import Salir from "./pages/Salir";
+import ReemplazoEquipos from "./ReemplazoEquipos/ReemplazoEquipos";
 
 // Página del menú principal
 function MenuPrincipal() {
@@ -52,13 +47,10 @@ function MenuPrincipal() {
     },
   ];
 
-  const fondo = process.env.PUBLIC_URL + "/fondo.jpg";
-
   return (
     <motion.div
       className="App"
       style={{
-        backgroundImage: `url(${fondo})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -97,13 +89,11 @@ function MenuPrincipal() {
 // Componente con animación entre rutas
 function AnimatedRoutes() {
   const location = useLocation();
-  const fondo = process.env.PUBLIC_URL + "/fondo.jpg";
 
   return (
     <div
       className="App"
       style={{
-        backgroundImage: `url(${fondo})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -125,58 +115,6 @@ function AnimatedRoutes() {
                 transition={{ duration: 0.6 }}
               >
                 <ReemplazoEquipos />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/arboles-binarios"
-            element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.6 }}
-              >
-                <ArbolesBinarios />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/series-deportivas"
-            element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.6 }}
-              >
-                <SeriesDeportivas />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/multiplicacion-matrices"
-            element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.6 }}
-              >
-                <MultiplicacionMatrices />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/salir"
-            element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.6 }}
-              >
-                <Salir />
               </motion.div>
             }
           />
