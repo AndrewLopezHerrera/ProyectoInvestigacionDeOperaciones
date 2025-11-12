@@ -14,6 +14,7 @@ const ReemplazoEquipos = () => {
   const [tiempoPlanReemplazo, setTiempoPlanReemplazo] = useState("");
 
   const [ResultadosAlgoritmo, setResultadosAlgoritmo] = useState(null);
+  const [TablaPlanesReemplazo, setTablaPlanesReemplazo] = useState(null);
 
   const validarEntero = (valor, setValor) => {
     if(!valor) {
@@ -52,7 +53,12 @@ const ReemplazoEquipos = () => {
       parseInt(tiempoPlanReemplazo),
       tablaReventaMantenimiento
     );
-    setResultadosAlgoritmo(resultados);
+    const listasSoluciones = [];
+    for(let indice = tiempoPlanReemplazo; indice >= 0; indice--) {
+      listasSoluciones.push(resultados.soluciones.get(String(indice)));
+    }
+    setResultadosAlgoritmo(listasSoluciones);
+    setTablaPlanesReemplazo(resultados.tablaPlan);
   }
 
   return (
@@ -108,7 +114,7 @@ const ReemplazoEquipos = () => {
               </tr>
             </thead>
             <tbody>
-              {tablaReventaMantenimiento.map((fila, index) => (
+              {tablaReventaMantenimiento && tablaReventaMantenimiento.map((fila, index) => (
                 <tr key={index}>
                   <td>{fila.años}</td>
                   <td>{fila.reventa}</td>
@@ -123,18 +129,41 @@ const ReemplazoEquipos = () => {
         </div>
       </div>
       {ResultadosAlgoritmo && (
-        <div>
+        <div className="tableResult">
           <h2>Resultados del Algoritmo</h2>
-          {ResultadosAlgoritmo.soluciones.map((solucion, key) => (
+          {ResultadosAlgoritmo.map((solucion, key) => (
             <div key={`solucion${solucion.numeroCaso}`}>
-              <h3>{`G(${solucion.numeroCaso})`}</h3>
+              <h3>{`G(${solucion.numeroCaso}) = ${solucion.solucionOptima}`}</h3>
               <div>
                 {solucion.operaciones.map((operacion, opKey) => (
-                  <p>{`C${operacion.anioInicial}${operacion.anioFinal} + G${operacion.anioFinal} = ${operacion.costoAnioInicial} + G${operacion.costoAnioFinal} = ${operacion.resultado}`}</p>
+                  <div className={solucion.solucionOptima === operacion.resultado ? "selectedResult" : ""} key={`operacion${operacion.anioInicial}${operacion.anioFinal}`}>{`C${operacion.anioInicial}${operacion.anioFinal} + G${operacion.anioFinal} = ${operacion.costoAnioInicial} + ${operacion.costoAnioFinal} = ${operacion.resultado}`}</div>
                 ))}
               </div>
             </div>
           ))}
+        </div>
+      )}
+      {TablaPlanesReemplazo && (
+        <div className="sectionTableResaleMaintenance">
+          <h2>Planes de Reemplazo Óptimos</h2>
+          <table className="tablePlanesReemplazo">
+            <thead>
+              <tr>
+                <th>t</th>
+                <th>G(t)</th>
+                <th>Próximo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {TablaPlanesReemplazo.map((plan, key) => (
+                <tr key={`plan${key}`}>
+                  <td>{plan.anio}</td>
+                  <td>{plan.costo}</td>
+                  <td>{plan.proximo.join(", ")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
       <button className="menu-boton" onClick={() => navigate("/")}>

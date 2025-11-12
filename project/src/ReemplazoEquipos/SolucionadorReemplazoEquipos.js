@@ -1,6 +1,7 @@
 /** @typedef {import("./OperacionG").OperacionG} OperacionG */
 /** @typedef {import("./SolucionG").SolucionG} SolucionG */
 /** @typedef {import("./SolucionReemplazoEquipos").SolucionReemplazoEquipos} SolucionReemplazoEquipos */
+/** @typedef {import("./ElementoTablaPlan").ElementoTablaPlan} ElementoTablaPlan */
 
 /** @type {Array<{años: number, reventa: number, mantenimiento: number}>} */
 let TablaReventaMantenimiento = [];
@@ -18,16 +19,11 @@ const Costos = [];
  * @returns {SolucionReemplazoEquipos}
  */
 const IniciarSolucionadorReemplazoEquipos = (costoInicial, vidaUtil, tiempoPlanReemplazo, tablaReventaMantenimiento) => {
-    console.log("Costo Inicial:", costoInicial);
-    console.log("Vida Útil:", vidaUtil);
-    console.log("Tiempo Plan Reemplazo:", tiempoPlanReemplazo);
-    console.log("Tabla Reventa y Mantenimiento:", tablaReventaMantenimiento);
     TablaReventaMantenimiento = tablaReventaMantenimiento;
     CalcularCostos(costoInicial);
-    console.log("Costos Calculados:", Costos);
     Soluciones.clear();
     Soluciones.set(String(tiempoPlanReemplazo), {
-        numeroCaso: 0,
+        numeroCaso: tiempoPlanReemplazo,
         operaciones: [],
         operacionOptima: null,
         solucionOptima: 0
@@ -39,9 +35,10 @@ const IniciarSolucionadorReemplazoEquipos = (costoInicial, vidaUtil, tiempoPlanR
     /** @type {SolucionReemplazoEquipos} */
     const solucion = {
         soluciones: Soluciones,
-        planesReemplazo: []
+        planesReemplazo: [],
+        tablaPlan: CrearTablaPlanesReemplazo(tiempoPlanReemplazo)
     };
-    console.log(solucion);
+    solucion.planesReemplazo = CrearPlanesReemplazo(vidaUtil, solucion.tablaPlan);
     return solucion;
 }
 
@@ -69,6 +66,40 @@ const CalcularCostosAnios = (anioInicial, vidaUtil, tiempoPlanReemplazo) => {
 }
 
 /**
+ * Método que crea la tabla de planes de reemplazo basados en el tiempo del plan de reemplazo.
+ * @param {number} tiempoPlanReemplazo La duración del plan de reemplazo.
+ * @returns {ElementoTablaPlan[]} La tabla de planes de reemplazo generada.
+ */
+const CrearTablaPlanesReemplazo = (tiempoPlanReemplazo) => {
+    const planes = [];
+    for(let anio = 0; anio <= tiempoPlanReemplazo; anio++) {
+        const solucion = Soluciones.get(String(anio));
+        const elementoPlan = {
+            anio,
+            costo: solucion.solucionOptima,
+            proximo: solucion.operaciones.map(op => solucion.solucionOptima === op.resultado ? op.anioFinal : null).filter(n => n !== null)
+        };
+        planes.push(elementoPlan);
+    }
+    return planes;
+}
+
+/**
+ * Método que crea los planes de reemplazo basados en la vida útil.
+ * @param {number} vidaUtil La vida útil del equipo.
+ * @param {ElementoTablaPlan[]} tablaPlanes La tabla de planes de reemplazo.
+ * @returns {number[][]} Los planes de reemplazo generados.
+ */
+const CrearPlanesReemplazo = (vidaUtil, tablaPlanes) => {
+    const planes = [];
+
+}
+
+const GenerarPlanRecursivo = (tablaPlanes, vidaUtil, planActual, añoActual) => {
+
+}
+
+/**
  * Método que encuentra la operación óptima dentro de una solución.
  * @param {SolucionG} solucion 
  */
@@ -80,6 +111,7 @@ const EncontrarOperacionOptima = (solucion) => {
         }
     }
     solucion.operacionOptima = operacionOptima;
+    solucion.solucionOptima = operacionOptima.resultado;
 }
 
 /**
@@ -111,7 +143,6 @@ const CalcularCostos = (costoInicial) => {
         for(let i = 0; i < element.años; i++) {
             costo += TablaReventaMantenimiento[i].mantenimiento;
         }
-        console.log(`Costo para ${element.años} años: ${costo}`);
         Costos.push(costo);
     });
 }
