@@ -11,7 +11,6 @@ const ReemplazoEquipos = () => {
   const [reventa, setReventa] = useState("");
   const [mantenimiento, setMantenimiento] = useState("");
   const [costoInicial, setCostoInicial] = useState("");
-  const [vidaUtil, setVidaUtil] = useState("");
   const [tiempoPlanReemplazo, setTiempoPlanReemplazo] = useState("");
 
   const [ResultadosAlgoritmo, setResultadosAlgoritmo] = useState(null);
@@ -33,7 +32,7 @@ const ReemplazoEquipos = () => {
     setAños(años + 1);
     setTablaReventaMantenimiento([
       ...tablaReventaMantenimiento,
-      { años, reventa, mantenimiento },
+      { años, reventa: Number(reventa), mantenimiento: Number(mantenimiento) },
     ]);
   }
 
@@ -49,7 +48,7 @@ const ReemplazoEquipos = () => {
   const ejecutarAlgoritmo = () => {
     const resultados = IniciarSolucionadorReemplazoEquipos(
       parseInt(costoInicial),
-      parseInt(vidaUtil),
+      tablaReventaMantenimiento.length,
       parseInt(tiempoPlanReemplazo),
       tablaReventaMantenimiento
     );
@@ -67,13 +66,6 @@ const ReemplazoEquipos = () => {
 
           onChange={(e) => validarEntero(e.target.value, setCostoInicial)}
           value={costoInicial}
-        />
-        <input
-          className="menu-boton"
-          placeholder="Vida útil (en años)"
-          type="number"
-          onChange={(e) => validarEntero(e.target.value, setVidaUtil)}
-          value={vidaUtil}
         />
         <input
           className="menu-boton"

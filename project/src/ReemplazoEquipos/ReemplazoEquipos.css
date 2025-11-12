@@ -56,3 +56,19 @@
   overflow-x: auto;
   margin-bottom: 30px;
 }
+
+.tableResult {
+  border-color: #213547;
+  width: 80%;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.tableResult > div {
+  border-bottom: #213547 1px solid;
+  width: 100%;
+}
+
+.tableResult > div:last-child {
+  border-bottom: none;
+}

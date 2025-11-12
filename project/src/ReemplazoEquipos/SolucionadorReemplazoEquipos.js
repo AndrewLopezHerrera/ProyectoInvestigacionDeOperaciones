@@ -18,16 +18,21 @@ const Costos = [];
  * @returns {SolucionReemplazoEquipos}
  */
 const IniciarSolucionadorReemplazoEquipos = (costoInicial, vidaUtil, tiempoPlanReemplazo, tablaReventaMantenimiento) => {
+    console.log("Costo Inicial:", costoInicial);
+    console.log("Vida Útil:", vidaUtil);
+    console.log("Tiempo Plan Reemplazo:", tiempoPlanReemplazo);
+    console.log("Tabla Reventa y Mantenimiento:", tablaReventaMantenimiento);
     TablaReventaMantenimiento = tablaReventaMantenimiento;
     CalcularCostos(costoInicial);
+    console.log("Costos Calculados:", Costos);
     Soluciones.clear();
-    Soluciones.set(String(0), {
+    Soluciones.set(String(tiempoPlanReemplazo), {
         numeroCaso: 0,
         operaciones: [],
         operacionOptima: null,
         solucionOptima: 0
     });
-    for(let anio = tiempoPlanReemplazo; anio >= 0; anio--) {
+    for(let anio = tiempoPlanReemplazo - 1; anio >= 0; anio--) {
         const solucion = CalcularCostosAnios(anio, vidaUtil, tiempoPlanReemplazo);
         Soluciones.set(String(anio), solucion);
     }
@@ -36,6 +41,7 @@ const IniciarSolucionadorReemplazoEquipos = (costoInicial, vidaUtil, tiempoPlanR
         soluciones: Soluciones,
         planesReemplazo: []
     };
+    console.log(solucion);
     return solucion;
 }
 
@@ -101,11 +107,11 @@ const CalcularCostoOperacionG = (anioInicial, anioFinal) => {
  */
 const CalcularCostos = (costoInicial) => {
     TablaReventaMantenimiento.forEach(element => {
-        let costo = costoInicial + element.mantenimiento - element.reventa;
+        let costo = costoInicial - element.reventa;
         for(let i = 0; i < element.años; i++) {
-            let mantenimiento = TablaReventaMantenimiento[i].mantenimiento;
-            costo += mantenimiento;
+            costo += TablaReventaMantenimiento[i].mantenimiento;
         }
+        console.log(`Costo para ${element.años} años: ${costo}`);
         Costos.push(costo);
     });
 }
