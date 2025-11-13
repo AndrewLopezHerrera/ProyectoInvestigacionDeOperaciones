@@ -11,7 +11,7 @@ import "./App.css";
 
 // Importar las páginas
 import ReemplazoEquipos from "./pages/ReemplazoEquipos";
-import ArbolesBinarios from "./pages/ArbolesBinarios";
+import ArbolesBinarios from "./pages/ArbolesBinarios/ArbolesBinarios";
 import SeriesDeportivas from "./pages/SeriesDeportivas/SeriesDeportivas";
 import MultiplicacionMatrices from "./pages/MultiplicacionMatrices";
 import Salir from "./pages/Salir";
