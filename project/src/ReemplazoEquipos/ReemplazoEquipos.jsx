@@ -15,6 +15,7 @@ const ReemplazoEquipos = () => {
 
   const [ResultadosAlgoritmo, setResultadosAlgoritmo] = useState(null);
   const [TablaPlanesReemplazo, setTablaPlanesReemplazo] = useState(null);
+  const [PlanesReemplazo, setPlanesReemplazo] = useState(null);
 
   const validarEntero = (valor, setValor) => {
     if(!valor) {
@@ -59,11 +60,62 @@ const ReemplazoEquipos = () => {
     }
     setResultadosAlgoritmo(listasSoluciones);
     setTablaPlanesReemplazo(resultados.tablaPlan);
+    setPlanesReemplazo(resultados.planesReemplazo);
+  }
+
+  const DescargarProblemaEnJSON = () => {
+    if(!costoInicial || !tiempoPlanReemplazo || tablaReventaMantenimiento.length === 0) {
+      alert("Por favor, complete todos los campos antes de descargar el problema.");
+      return;
+    }
+    const problema = {
+      costoInicial: parseInt(costoInicial),
+      tiempoPlanReemplazo: parseInt(tiempoPlanReemplazo),
+      tablaReventaMantenimiento
+    };
+    const json = JSON.stringify(problema, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "problema_reemplazo_equipos.json";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  const CargarProblemaDeJSON = (event) => {
+    const file = event.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const contenido = e.target.result;
+        const problema = JSON.parse(contenido);
+        setCostoInicial(problema.costoInicial.toString());
+        setTiempoPlanReemplazo(problema.tiempoPlanReemplazo.toString());
+        setTablaReventaMantenimiento(problema.tablaReventaMantenimiento);
+        setAños(problema.tablaReventaMantenimiento.length + 1);
+      } catch (error) {
+        alert("Error al cargar el archivo JSON. Por favor, asegúrese de que el archivo tenga el formato correcto.");
+      }
+    };
+    reader.readAsText(file);
   }
 
   return (
     <div className="MainContainer">
       <h1>Reemplazo de Equipos</h1>
+      <div className="sectionInputInfo">
+        <button className="menu-boton" onClick={DescargarProblemaEnJSON}>
+          Descargar Problema en JSON
+        </button>
+        <input
+          className="menu-boton"
+          type="file"
+          accept=".json"
+          onChange={CargarProblemaDeJSON}
+        />
+      </div>
       <div className="sectionInputInfo">
         <input
           className="menu-boton"
@@ -160,6 +212,25 @@ const ReemplazoEquipos = () => {
                   <td>{plan.anio}</td>
                   <td>{plan.costo}</td>
                   <td>{plan.proximo.join(", ")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {PlanesReemplazo && (
+        <div className="sectionTableResaleMaintenance">
+          <h2>Planes de Reemplazo Generados</h2>
+          <table className="tablePlanesReemplazo">
+            <thead>
+              <tr>
+                <th>Plan</th>
+              </tr>
+            </thead>
+            <tbody>
+              {PlanesReemplazo.map((plan, key) => (
+                <tr key={`planGenerado${key}`}>
+                  <td>{plan.join(" -> ")}</td>
                 </tr>
               ))}
             </tbody>

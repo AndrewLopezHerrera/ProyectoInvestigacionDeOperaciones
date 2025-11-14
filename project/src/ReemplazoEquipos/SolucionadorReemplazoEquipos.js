@@ -8,7 +8,9 @@ let TablaReventaMantenimiento = [];
 /** @type {Map<string, SolucionG>} */
 const Soluciones = new Map();
 /** @type {Array<number>} */
-const Costos = [];
+let Costos = [];
+/** @type {Array<number[]>} */
+let PlanesReemplazo = [];
 
 /**
  * Método que inicia el solucionador del problema de reemplazo de equipos.
@@ -20,8 +22,10 @@ const Costos = [];
  */
 const IniciarSolucionadorReemplazoEquipos = (costoInicial, vidaUtil, tiempoPlanReemplazo, tablaReventaMantenimiento) => {
     TablaReventaMantenimiento = tablaReventaMantenimiento;
+    Costos = [];
     CalcularCostos(costoInicial);
     Soluciones.clear();
+    PlanesReemplazo = [];
     Soluciones.set(String(tiempoPlanReemplazo), {
         numeroCaso: tiempoPlanReemplazo,
         operaciones: [],
@@ -38,7 +42,8 @@ const IniciarSolucionadorReemplazoEquipos = (costoInicial, vidaUtil, tiempoPlanR
         planesReemplazo: [],
         tablaPlan: CrearTablaPlanesReemplazo(tiempoPlanReemplazo)
     };
-    solucion.planesReemplazo = CrearPlanesReemplazo(vidaUtil, solucion.tablaPlan);
+    solucion.planesReemplazo = CrearPlanesReemplazo(tiempoPlanReemplazo, solucion.tablaPlan);
+    console.log(solucion);
     return solucion;
 }
 
@@ -90,13 +95,32 @@ const CrearTablaPlanesReemplazo = (tiempoPlanReemplazo) => {
  * @param {ElementoTablaPlan[]} tablaPlanes La tabla de planes de reemplazo.
  * @returns {number[][]} Los planes de reemplazo generados.
  */
-const CrearPlanesReemplazo = (vidaUtil, tablaPlanes) => {
-    const planes = [];
-
+const CrearPlanesReemplazo = (tiempoPlanReemplazo, tablaPlanes) => {
+    GenerarPlanRecursivo(tablaPlanes, tiempoPlanReemplazo, [], 0);
+    return PlanesReemplazo;
 }
 
-const GenerarPlanRecursivo = (tablaPlanes, vidaUtil, planActual, añoActual) => {
-
+/**
+ * 
+ * @param {ElementoTablaPlan[]} tablaPlanes 
+ * @param {number} vidaUtil 
+ * @param {number[]} planActual 
+ * @param {number} añoActual 
+ * @returns 
+ */
+const GenerarPlanRecursivo = (tablaPlanes, tiempoPlanReemplazo, planActual, añoActual) => {
+    if(tiempoPlanReemplazo == añoActual) {
+        planActual.push(añoActual);
+        PlanesReemplazo.push(planActual);
+        return;
+    }
+    const elementoActual = tablaPlanes[añoActual];
+    const proximosAnios = elementoActual.proximo;
+    for(const proximo of proximosAnios) {
+        const nuevoPlan = [...planActual];
+        nuevoPlan.push(añoActual);
+        GenerarPlanRecursivo(tablaPlanes, tiempoPlanReemplazo, nuevoPlan, proximo);
+    }
 }
 
 /**
