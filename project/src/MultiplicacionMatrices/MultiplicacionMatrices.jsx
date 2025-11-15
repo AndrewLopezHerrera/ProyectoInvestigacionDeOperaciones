@@ -209,7 +209,7 @@ const MultiplicacionMatrices = () => {
       )}
       {matrizGanadores && (
       <div className="sectionResults">
-        <h2>Matriz de Ganadores</h2>
+        <h2>Tabla P</h2>
         <table className="tableMultiplicacionMatrices">
           <thead>
             <tr>
