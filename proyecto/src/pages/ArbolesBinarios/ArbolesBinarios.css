@@ -22,24 +22,24 @@
   margin: 20px 0; 
 }
 
-/* Contenedor general de la tabla */
+
 table {
   border-collapse: collapse;
   margin: 20px auto;
   width: 60%;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  color: black; /* 🔹 texto negro por defecto */
+  color: black;
 }
 
-/* Encabezado (títulos) */
+
 table thead {
   background-color: #1e90ff;
-  color: white; /* 🔹 texto blanco solo en los títulos */
+  color: white; 
   font-weight: bold;
 }
 
-/* Celdas */
+
 table th,
 table td {
   border: 1px solid #ccc;
@@ -47,17 +47,41 @@ table td {
   text-align: center;
 }
 
-/* Inputs dentro de las celdas */
+
 table input {
   width: 80%;
   padding: 5px;
   border: 1px solid #aaa;
   border-radius: 4px;
   text-align: center;
-  color: black; /* 🔹 texto de los inputs negro */
+  color: black; 
 }
 
-/* Hover opcional */
+
 table tbody tr:hover {
   background-color: #eef6ff;
+}
+
+
+.tabla-contenedor {
+  width: 90%;           
+  max-width: 1200px;    
+  overflow-x: auto;     
+  margin: 0 auto;       
+}
+
+.tabla-matrizA {
+  width: 100%;          
+  border-collapse: collapse;
+  table-layout: fixed;  
+}
+
+.tabla-matrizA th,
+.tabla-matrizA td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

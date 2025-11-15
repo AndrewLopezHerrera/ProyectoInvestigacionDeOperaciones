@@ -28,6 +28,8 @@ export default function ArbolesBinarios() {
     }, 400);
   };
 
+
+
   const reiniciarModo = () => {
     setEnTransicion(true);
     setTimeout(() => {
@@ -36,12 +38,88 @@ export default function ArbolesBinarios() {
     }, 400);
   };
 
+  const guardarEnJson = () =>{
+  const jsonString = JSON.stringify(datos, null, 2); // bien formateado
+
+  const blob = new Blob([jsonString], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "ArbolBinario";
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+
+  const validarArchivo = (e) => {
+  const archivo = e.target.files[0];
+
+    if (!archivo) return;
+
+    // Verificar que sea del tipo correct
+    if (archivo.type !== "application/json") {
+      alert("El archivo debe ser un JSON válido.");
+      return;
+    }
+
+    const lector = new FileReader();
+
+    lector.onload = (evento) => {
+      try {
+        const contenido = JSON.parse(evento.target.result);
+        
+        console.log("JSON leído:", contenido);
+
+       
+        if (!validarEstructura(contenido)) {
+          alert("El archivo no tiene la estructura correcta.");
+          //Mandar a la ventana anterior
+          cambiarPantalla("inicio")
+          return;
+        }
+
+        //Guardar los datos en la variable y acomodar todo para ejecutar el algoritmo
+        setDatos(contenido);
+        setCantidadClaves(contenido.length)
+        alert("Archivo cargado correctamente.");
+        
+        //Pasar a la ventana donde se pueden modificar las claves
+        setNodos([])
+        setAristas([])
+        cambiarPantalla("tablaValores")
+
+      } catch (err) {
+        alert("Error al leer el archivo JSON.");
+        console.error(err);
+      }
+    };
+
+    lector.readAsText(archivo);
+  };
+
+
+  const validarEstructura = (json) => {
+  return (
+    Array.isArray(json) &&
+    json.every((item) => {
+      if (!item || typeof item !== "object") return false;
+      if (typeof item.clave !== "string" || item.clave.trim() === "") return false;
+      const v = item.valor;
+      if (typeof v !== "number") return false;
+      if (!Number.isFinite(v)) return false; 
+      if (v < 0) return false; 
+      
+
+      return true;
+    })
+  );
+}
+
+
   //Las entradas van a estar en datos, sumaValores y cantidadClaves
   const algoritmoArbolBinario = () =>{
-    //Limpiar listas
-    setNodos([])
-    setAristas([])
-
     //Crear la tabla A 
     const n = Number(cantidadClaves);
     console.log("n: " + n)
@@ -87,84 +165,8 @@ export default function ArbolesBinarios() {
     console.table(tablaA)
     console.table(tablaR)
 
-    let nodesA = [
-    {
-      id: "A",
-      position: { x: 300, y: 20 },
-      data: { label: "A" },
-      style: {
-        padding: 10,
-        border: "1px solid black",
-        borderRadius: 6,
-        background: "#e3f2fd",
-      },
-    },
-    {
-      id: "B",
-      position: { x: 150, y: 120 },
-      data: { label: "B" },
-      style: {
-        padding: 10,
-        background: "#fff3cd",
-        borderRadius: 6,
-      },
-    },
-    {
-      id: "C",
-      position: { x: 450, y: 120 },
-      data: { label: "C" },
-      style: {
-        padding: 10,
-        background: "#fff3cd",
-        borderRadius: 6,
-      },
-    },
-    {
-      id: "D",
-      position: { x: 80, y: 220 },
-      data: { label: "D" },
-      style: {
-        padding: 10,
-        background: "#c8e6c9",
-        borderRadius: 6,
-      },
-    },
-    {
-      id: "E",
-      position: { x: 220, y: 220 },
-      data: { label: "E" },
-      style: {
-        padding: 10,
-        background: "#c8e6c9",
-        borderRadius: 6,
-      },
-    },
-    {
-      id: "F",
-      position: { x: 450, y: 220 },
-      data: { label: "F" },
-      style: {
-        padding: 10,
-        background: "#c8e6c9",
-        borderRadius: 6,
-      },
-    },
-  ];
 
-  // Lista de aristas (conexiones)
-  let edgesA = [
-    { id: "A-B", source: "A", target: "B" },
-    { id: "A-C", source: "A", target: "C" },
-    { id: "B-D", source: "B", target: "D" },
-    { id: "B-E", source: "B", target: "E" },
-    { id: "C-F", source: "C", target: "F" },
-  ];
-
-
-    //setNodos(nodesA);
-    //setAristas(edgesA);
-
-    construirArbolB(tablaR, 0, (tablaA[0].length - 1), null, 400, 50, 200)
+    construirArbolB(tablaR, 0, (tablaA[0].length - 1), null, 400, 50, 350)
     setNodos([...nodos]);
     setAristas([...aristas]);
     cambiarPantalla("resultado")
@@ -181,26 +183,39 @@ export default function ArbolesBinarios() {
 // columna = j
 // padre = id de clave del padre (string) o null
 const construirArbolB = (tablaR, fila, columna, padre, x, y, corrimiento) => {
-  // Caso base: subárbol vacío -> no se agrega nada
-  if (fila === columna) return;
+  
+  if (fila === columna) {
+    return;
+  } 
 
-  let k = tablaR[fila][columna];   // valor en R[i][j]
+  let k = tablaR[fila][columna];   
 
-  if (k === -1) return; // no existe raíz para ese intervalo
+  if (k === -1) {
+    return;
+  } 
 
-  let idx = k - 1; // índice dentro de datos[]
-  let clave = datos[idx].clave; // texto de la clave
+  let idx = k - 1; 
+  let clave = datos[idx].clave; 
 
-  // Crear nodo
+  
   if (!nodos.some(n => n.id === clave)) {
     nodos.push({
       id: clave,
       position: { x, y },
-      data: { label: clave }
+      data: { label: clave },
+      style: {
+      padding: 4,         
+      fontSize: "10px",   
+      borderRadius: 4,
+      border: "1px solid #888",
+      background: "#d6eaff",
+      width: 80,          
+      height: 20        
+    }
     });
   }
 
-  // Si hay padre → agregar arista
+  
   if (padre !== null) {
     let edgeId = `${padre}-${clave}`;
     if (!aristas.some(e => e.id === edgeId)) {
@@ -212,11 +227,11 @@ const construirArbolB = (tablaR, fila, columna, padre, x, y, corrimiento) => {
     }
   }
 
-  // Subárbol izquierdo: [fila, k-1]
+  // para el subarbol izquierdo
   construirArbolB(tablaR, fila, k - 1, clave, (x - corrimiento/2), (y+90), (corrimiento/2));
 
-  // Subárbol derecho: [k, columna]
-  construirArbolB(tablaR, k , columna, clave, (x + corrimiento/2), (y+90), (corrimiento/2));
+  // para el subarbol derecho
+ construirArbolB(tablaR, k , columna, clave, (x + corrimiento/2), (y+90), (corrimiento/2));
 };
 
 
@@ -281,7 +296,10 @@ const construirArbolB = (tablaR, fila, columna, padre, x, y, corrimiento) => {
 
       //Si pasa la cantidad de verificaciones paso a la otra pantalla y genero la matriz con los datos
       setDatos(Array.from({ length: numero }, () => ({ clave: "", valor: "" })));
+      setNodos([])
+      setAristas([])
       cambiarPantalla("tablaValores");
+  
       //setCantidadClaves(number(cantidadClaves))
     }
   };
@@ -322,7 +340,7 @@ const construirArbolB = (tablaR, fila, columna, padre, x, y, corrimiento) => {
     
     ordenarClaves(); //Ordeno las claves
     colocarProbabilidad(suma); //Con la suma de todos los pesos coloco la probabilidad
-
+    
     algoritmoArbolBinario();
   };
 
@@ -355,7 +373,7 @@ const construirArbolB = (tablaR, fila, columna, padre, x, y, corrimiento) => {
           <h1>Árboles Binarios de Búsqueda</h1>
           <h2>¿Cómo deseas calcular?</h2>
           <button className="menu-boton" onClick={() => cambiarPantalla("claves")}>Calcular Ingresando Datos</button>
-          <button className="menu-boton">Calcular Cargando Datos</button>
+          <button className="menu-boton" onClick={() => cambiarPantalla("cargarArchivo")}>Calcular Cargando Datos</button>
         </div>
 
         <div>
@@ -438,16 +456,30 @@ const construirArbolB = (tablaR, fila, columna, padre, x, y, corrimiento) => {
       </div>
       )} 
 
+      {pantalla == "cargarArchivo" &&(
+        <div>
+          <h1>Cargar Archivo</h1>
+          <h2>Debe de cargar un archivo con extensión .json y el formato adecuado.</h2>
+           <input type="file" accept=".json"   onChange={validarArchivo}/>
+           <div>
+          
+          <button className="menu-boton" onClick={() => cambiarPantalla("opcionesManualArchivo")}>
+            Volver al Menú Anterior
+          </button>
+          </div>
+        </div>
+      )}
+
       {pantalla == "resultado" &&(
         <div>
-          <div>
+          <div className="tabla-contenedor">
             <h1>Resultados Tabla A</h1>
             <table className="tabla-matrizA">
             <thead>
               <tr>
                 <th></th> 
                 {tablaA[0].map((_, idx) => (
-                  <th key={idx}>{idx}</th>
+                  <th key={idx}>{idx} {idx > 0 && idx <= datos.length ? datos[idx - 1].clave : ""}</th>
                 ))}
               </tr>
             </thead>
@@ -502,9 +534,12 @@ const construirArbolB = (tablaR, fila, columna, padre, x, y, corrimiento) => {
             <Controls />
           </ReactFlow>
         </div>
-              <button className="menu-boton" onClick={() => cambiarPantalla("tablaValores")}>
+            <button className="menu-boton" onClick={() => cambiarPantalla("tablaValores")}>
             Volver al Menú Anterior
-          </button>
+            </button>
+            <button className="menu-boton" onClick={() => guardarEnJson()}>
+            Guardar en Archivo JSON
+            </button>
         </div>
       )}
 
