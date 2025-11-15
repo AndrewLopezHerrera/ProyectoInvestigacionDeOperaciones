@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-
+import ReactFlow, { Background, Controls } from "reactflow";
+import "reactflow/dist/style.css";
 import "./ArbolesBinarios.css";
+import { number } from "framer-motion";
+import { col, source } from "framer-motion/client";
 
 export default function ArbolesBinarios() {
   const navegar = useNavigate();
@@ -12,6 +15,10 @@ export default function ArbolesBinarios() {
   const [cantidadClaves, setCantidadClaves] = useState(1);
   const [datos, setDatos] = useState([]);
   const [sumaValores, setSumaValores] = useState(0);
+  const [tablaA, setTablaA] = useState([])
+  const [tablaR, setTablaR] = useState([])
+  const [nodos, setNodos] = useState([])
+  const [aristas, setAristas] = useState([])
 
   const cambiarPantalla = (nueva) => {
     setEnTransicion(true);
@@ -31,15 +38,21 @@ export default function ArbolesBinarios() {
 
   //Las entradas van a estar en datos, sumaValores y cantidadClaves
   const algoritmoArbolBinario = () =>{
+    //Limpiar listas
+    setNodos([])
+    setAristas([])
+
     //Crear la tabla A 
-    const tablaA = Array.from({ length: cantidadClaves }, () => Array(cantidadClaves).fill(-1));
+    const n = Number(cantidadClaves);
+    console.log("n: " + n)
+    let tablaA = Array.from({ length: n +1 }, () => Array(n + 1).fill(-1));
 
     //Crear la tabla R con las mismas dimensiones de A
-    const tablaR = Array.from({ length: cantidadClaves  }, () => Array(cantidadClaves).fill(-1));
+    let tablaR = Array.from({ length: n + 1 }, () => Array(n +1).fill(-1));
 
     //Rellenar de ceros la diagonal 
-    rellenarDiagonalCeros(tablaA);
-    rellenarDiagonalCeros(tablaR);
+    tablaA = rellenarDiagonalCeros(tablaA);
+    tablaR = rellenarDiagonalCeros(tablaR);
 
     //Rellenar la diagonal de la matriz A con los valores de las claves y de la R con el valor de i +1
     for(let i = 0; i < datos.length; i++){
@@ -48,36 +61,197 @@ export default function ArbolesBinarios() {
       tablaR[i][i+1] = i+1; //Ese sería el valor de k
     }
     
+    //Antes del ciclo
+    console.log("Antes del ciclo: ")
+       console.table(tablaA)
+        console.table(tablaR)
+
     //Ciclo para rellenar la tabla A y R en las casillas que corresponde con el algoritmo
-    for(let i = 0; i < cantidadClaves; i++){
-      for(let j = i +2; j <= cantidadClaves; j++){
-        tablaA[i][j] =  69
+    //Primero un ciclo que termina cuando llegue a la última columna
+    let fila = 0
+    for(let col = 2; col < (n +1); col++){
+      //Ciclo para rellenar de forma diagonal a partir de col hasta el final de las columnas
+      for(let i = col; i < (n+1); i++){
+        //Llamada a la función 
+        encontrarMenor(tablaA, tablaR, fila, i)
+  
+        fila +=1 //Siempre aumento en 1 fila
       }
+      //Reinicio la fila
+      fila = 0
+
     }
 
+    setTablaA([...tablaA]);
+    setTablaR([...tablaR]);
     console.table(tablaA)
     console.table(tablaR)
 
+    let nodesA = [
+    {
+      id: "A",
+      position: { x: 300, y: 20 },
+      data: { label: "A" },
+      style: {
+        padding: 10,
+        border: "1px solid black",
+        borderRadius: 6,
+        background: "#e3f2fd",
+      },
+    },
+    {
+      id: "B",
+      position: { x: 150, y: 120 },
+      data: { label: "B" },
+      style: {
+        padding: 10,
+        background: "#fff3cd",
+        borderRadius: 6,
+      },
+    },
+    {
+      id: "C",
+      position: { x: 450, y: 120 },
+      data: { label: "C" },
+      style: {
+        padding: 10,
+        background: "#fff3cd",
+        borderRadius: 6,
+      },
+    },
+    {
+      id: "D",
+      position: { x: 80, y: 220 },
+      data: { label: "D" },
+      style: {
+        padding: 10,
+        background: "#c8e6c9",
+        borderRadius: 6,
+      },
+    },
+    {
+      id: "E",
+      position: { x: 220, y: 220 },
+      data: { label: "E" },
+      style: {
+        padding: 10,
+        background: "#c8e6c9",
+        borderRadius: 6,
+      },
+    },
+    {
+      id: "F",
+      position: { x: 450, y: 220 },
+      data: { label: "F" },
+      style: {
+        padding: 10,
+        background: "#c8e6c9",
+        borderRadius: 6,
+      },
+    },
+  ];
+
+  // Lista de aristas (conexiones)
+  let edgesA = [
+    { id: "A-B", source: "A", target: "B" },
+    { id: "A-C", source: "A", target: "C" },
+    { id: "B-D", source: "B", target: "D" },
+    { id: "B-E", source: "B", target: "E" },
+    { id: "C-F", source: "C", target: "F" },
+  ];
+
+
+    //setNodos(nodesA);
+    //setAristas(edgesA);
+
+    construirArbolB(tablaR, 0, (tablaA[0].length - 1), null, 400, 50, 200)
+    setNodos([...nodos]);
+    setAristas([...aristas]);
+    cambiarPantalla("resultado")
+    
+    console.log(nodos)
+    console.log(aristas)
+
   };
+
+
+
+  //Nunca puedo ser [0][0]
+  // fila = i
+// columna = j
+// padre = id de clave del padre (string) o null
+const construirArbolB = (tablaR, fila, columna, padre, x, y, corrimiento) => {
+  // Caso base: subárbol vacío -> no se agrega nada
+  if (fila === columna) return;
+
+  let k = tablaR[fila][columna];   // valor en R[i][j]
+
+  if (k === -1) return; // no existe raíz para ese intervalo
+
+  let idx = k - 1; // índice dentro de datos[]
+  let clave = datos[idx].clave; // texto de la clave
+
+  // Crear nodo
+  if (!nodos.some(n => n.id === clave)) {
+    nodos.push({
+      id: clave,
+      position: { x, y },
+      data: { label: clave }
+    });
+  }
+
+  // Si hay padre → agregar arista
+  if (padre !== null) {
+    let edgeId = `${padre}-${clave}`;
+    if (!aristas.some(e => e.id === edgeId)) {
+      aristas.push({
+        id: edgeId,
+        source: padre,
+        target: clave
+      });
+    }
+  }
+
+  // Subárbol izquierdo: [fila, k-1]
+  construirArbolB(tablaR, fila, k - 1, clave, (x - corrimiento/2), (y+90), (corrimiento/2));
+
+  // Subárbol derecho: [k, columna]
+  construirArbolB(tablaR, k , columna, clave, (x + corrimiento/2), (y+90), (corrimiento/2));
+};
+
 
   const encontrarMenor = (matrizA, matrizR, fila, columna) =>{
     const resultados = []
-    let valor = 0
+
     let sumaClaves = 0
     //Sumar el valor fijo de las claves
-    for(let i = fila + 1; i <= columna; i++){
+    for(let i = fila  ; i < columna; i++){
       sumaClaves += datos[i].valor
+      
     }
 
-    //Iterar desde 1 hasta la columna 
-    for(let i = 0; i <= columna; i++){
-      valor = matrizA[fila][i-1] + matrizA[i+1][columna] + sumaClaves
-      resultados.push(valor)
-      valor = 0
+ 
+
+    //Iterar desde fila + 1 hasta la columna
+    for(let i = fila +1; i <= columna; i++){
+      //console.log("Fila: " + (fila+1) + " columna: " + columna + " k: " +i )
+      //console.log("Suma claves: " +sumaClaves)
+      //console.log("A[I][K-1] " +  matrizA[fila][i - 1])
+      //console.log("A[k][j] " + matrizA[i][columna])
+      resultados.push({k: i, valor: matrizA[fila][i-1] + matrizA[i][columna] + sumaClaves})
+  
+      
     }
+
+    
 
     //Elegir el menor y ponerlo en esa posición de la matriz
-    
+    const menor = resultados.reduce((min, actual) =>
+      actual.valor < min.valor ? actual : min
+    );
+
+    matrizA[fila][columna] = menor.valor 
+    matrizR[fila][columna] = menor.k
 
 
 
@@ -108,6 +282,7 @@ export default function ArbolesBinarios() {
       //Si pasa la cantidad de verificaciones paso a la otra pantalla y genero la matriz con los datos
       setDatos(Array.from({ length: numero }, () => ({ clave: "", valor: "" })));
       cambiarPantalla("tablaValores");
+      //setCantidadClaves(number(cantidadClaves))
     }
   };
 
@@ -135,27 +310,25 @@ export default function ArbolesBinarios() {
         alert(`Error: El valor en la fila ${i + 1} debe ser un número mayor o igual a 0.`);
         return;
       }
-      console.log("valor original: " + valor + " valor float: " + numValor )
+      
       datos[i].valor = numValor;
+      console.log("Valor: " + numValor)
     }
 
     //Pasa las verificaciones, ordeno los valores y les coloco su probabilidad
-    calcularSumaValores(); //Sumo todos los pesos
-    console.log("Suma valores:" + sumaValores)
-
+    const suma = datos.reduce((total, fila) => total + Number(fila.valor), 0); //Sumo todos los pesos
+    setSumaValores(suma)
+ 
+    
     ordenarClaves(); //Ordeno las claves
-    colocarProbabilidad(); //Con la suma de todos los pesos coloco la probabilidad
+    colocarProbabilidad(suma); //Con la suma de todos los pesos coloco la probabilidad
 
     algoritmoArbolBinario();
   };
 
 
   const ordenarClaves = () => {
-  const datosOrdenados = [...datos]
-    .map(obj => ({ ...obj })) // copia cada objeto
-    .sort((a, b) => a.clave.localeCompare(b.clave));
-  
-  setDatos(datosOrdenados);
+  datos.sort((a, b) => a.clave.localeCompare(b.clave));
 };
 
   const calcularSumaValores = () => {
@@ -163,12 +336,15 @@ export default function ArbolesBinarios() {
     setSumaValores(suma);
   };
 
-  const colocarProbabilidad = () =>{
+  const colocarProbabilidad = (sumaTodos) =>{
     datos.forEach((item) => {
-      item.valor = item.valor / sumaValores;
-      console.log("Item valor: " + item.valor + " dividido entre: " + sumaValores)
+      item.valor = item.valor / sumaTodos;
+      console.log(item.valor + " : " + sumaTodos)
     });
   }
+
+
+
 
   return (
     <div className="App main-page">
@@ -222,7 +398,7 @@ export default function ArbolesBinarios() {
               <tr>
                 <th></th>
                 <th>Clave</th>
-                <th>Perso</th>
+                <th>Peso</th>
               </tr>
             </thead>
             <tbody>
@@ -261,6 +437,76 @@ export default function ArbolesBinarios() {
           </div>
       </div>
       )} 
+
+      {pantalla == "resultado" &&(
+        <div>
+          <div>
+            <h1>Resultados Tabla A</h1>
+            <table className="tabla-matrizA">
+            <thead>
+              <tr>
+                <th></th> 
+                {tablaA[0].map((_, idx) => (
+                  <th key={idx}>{idx}</th>
+                ))}
+              </tr>
+            </thead>
+
+            <tbody>
+              {tablaA.map((fila, i) => (
+                <tr key={i}>
+                  <th>{i + 1}</th>
+                  {fila.map((valor, j) => (
+                    <td key={j}>{valor === -1 ? "" : valor}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          </div>
+
+          <div>
+            <h1>Resultados Tabla R</h1>
+            <table className="tabla-matrizR">
+            <thead>
+              <tr>
+                <th></th>
+                {tablaR[0].map((_, idx) => (
+                  <th key={idx}>{idx}</th>
+                ))}
+              </tr>
+            </thead>
+
+            <tbody>
+              {tablaR.map((fila, i) => (
+                <tr key={i}>
+                  <th>{i + 1}</th>
+                  {fila.map((valor, j) => (
+                    <td key={j}>{valor === -1 ? "" : valor}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          </div>
+
+          <div style={{ width: "100%", height: "500px", border: "1px solid black" }}>
+          <ReactFlow
+            nodes={nodos}
+            edges={aristas}
+            fitView
+            nodesConnectable={false}
+            elementsSelectable={false}
+          >
+            <Background />
+            <Controls />
+          </ReactFlow>
+        </div>
+              <button className="menu-boton" onClick={() => cambiarPantalla("tablaValores")}>
+            Volver al Menú Anterior
+          </button>
+        </div>
+      )}
 
       {pantalla === "menu" && (
         <button className="menu-boton" onClick={() => navegar("/")}>
