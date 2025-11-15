@@ -1,0 +1,26 @@
+{
+  "costoInicial": 9999,
+  "tiempoPlanReemplazo": 8,
+  "tablaReventaMantenimiento": [
+    {
+      "años": 1,
+      "reventa": 7125,
+      "mantenimiento": 305
+    },
+    {
+      "años": 2,
+      "reventa": 5000,
+      "mantenimiento": 530
+    },
+    {
+      "años": 3,
+      "reventa": 3700,
+      "mantenimiento": 800
+    },
+    {
+      "años": 4,
+      "reventa": 3310,
+      "mantenimiento": 1100
+    }
+  ]
+}

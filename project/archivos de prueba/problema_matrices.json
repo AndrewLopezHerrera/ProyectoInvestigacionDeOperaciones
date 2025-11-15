@@ -1,0 +1,34 @@
+{
+  "tablas": [
+    {
+      "id": 1,
+      "filas": "5",
+      "columnas": "2"
+    },
+    {
+      "id": 2,
+      "filas": "2",
+      "columnas": "3"
+    },
+    {
+      "id": 3,
+      "filas": "3",
+      "columnas": "4"
+    },
+    {
+      "id": 4,
+      "filas": "4",
+      "columnas": "6"
+    },
+    {
+      "id": 5,
+      "filas": "6",
+      "columnas": "7"
+    },
+    {
+      "id": 6,
+      "filas": "7",
+      "columnas": "8"
+    }
+  ]
+}
