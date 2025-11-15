@@ -1,0 +1,139 @@
+.MainContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: "Segoe UI", sans-serif;
+  color: #ffffff;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100vh;
+  width: 100vw;
+  background-color: #ffffff;
+}
+
+.MainContainer h1 {
+  color: #213547;
+}
+
+.MainContainer h3 {
+  width: 100%;
+  text-align: left;
+  color: #213547;
+}
+
+.sectionInputInfo {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, auto));
+  margin-bottom: 30px;
+  gap: 20px;
+  justify-content: center;
+}
+
+.sectionInputInfo input {
+  background-color: #ffffff;
+  border: 2px solid #213547;
+  color: black;
+}
+
+.buttonDeleteRow {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.buttonDeleteRow:hover {
+  background-color: #e60000;
+}
+
+.sectionResults {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionResults > h2 {
+  color: #213547;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.sectionIterationK {
+  width: 100%;
+  margin-bottom: 30px;
+  color: black;
+  text-align: left;
+}
+
+.sectionIterationKSelected {
+  width: 100%;
+  margin-bottom: 30px;
+  color: black;
+  text-align: left;
+  border: #e60000 2px solid;
+  border-radius: 10px;
+}
+
+.tableMultiplicacionMatrices {
+  width: 50%;
+  max-width: 1100px;
+  margin: 30px auto;
+  border-collapse: collapse;
+  background: #ffffff;
+  color: #213547;
+  box-shadow: 0 8px 24px rgba(33, 53, 71, 0.06);
+  border-radius: 10px;
+  overflow: hidden;
+  min-width: 480px; /* permite scroll horizontal en pantallas pequeñas */
+}
+
+.tableMultiplicacionMatrices thead {
+  background: linear-gradient(90deg, #213547, #2b5b75);
+  color: #ffffff;
+}
+
+.tableMultiplicacionMatrices thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+}
+
+.tableMultiplicacionMatrices tbody td {
+  padding: 12px 16px;
+  font-size: 14px;
+  vertical-align: middle;
+
+}
+
+.tableMultiplicacionMatrices tbody tr {
+  border-bottom: 1px solid rgba(33, 53, 71, 0.06);
+  background: #ffffff;
+}
+
+.tableMultiplicacionMatrices tbody tr:nth-child(even) {
+  background: #f7fbfd;
+}
+
+.tableMultiplicacionMatrices tbody tr:hover {
+  background: rgba(33, 53, 71, 0.04);
+}
+
+.tableMultiplicacionMatrices td:last-child {
+  max-width: 360px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.separator {
+  height: 1px;
+  background-color: #ccc;
+  margin: 20px 0;
+}

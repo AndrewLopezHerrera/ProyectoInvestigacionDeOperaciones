@@ -10,6 +10,7 @@ import "./App.css";
 
 // Importar las páginas
 import ReemplazoEquipos from "./ReemplazoEquipos/ReemplazoEquipos";
+import MultiplicacionMatrices from "./MultiplicacionMatrices/MultiplicacionMatrices";
 
 // Página del menú principal
 function MenuPrincipal() {
@@ -115,6 +116,19 @@ function AnimatedRoutes() {
                 transition={{ duration: 0.6 }}
               >
                 <ReemplazoEquipos />
+              </motion.div>
+            }
+          />
+          <Route
+            path="/multiplicacion-matrices"
+            element={
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.6 }}
+              >
+                <MultiplicacionMatrices />
               </motion.div>
             }
           />
