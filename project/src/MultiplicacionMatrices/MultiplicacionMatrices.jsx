@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SolucionarMultiplicacionMatrices from "./SolucionadorMultiplicacionMatrices";
 import "./MultiplicacionMatrices.css";
+import { useNavigate } from "react-router-dom";
 
 const MultiplicacionMatrices = () => {
   const [tablaEntradas, setTablaEntradas] = useState([]);
@@ -10,6 +11,8 @@ const MultiplicacionMatrices = () => {
   const [tablaCostos, setTablaCostos] = useState(null);
   const [iteracionesK, setIteracionesK] = useState(null);
   const [matrizGanadores, setMatrizGanadores] = useState(null);
+
+  const navigate = useNavigate();
 
   const agregarFila = () => {
     if(tablaEntradas.length > 10){
@@ -232,6 +235,9 @@ const MultiplicacionMatrices = () => {
         </table>
       </div>
       )}
+      <button className="menu-boton" onClick={() => navigate("/")}>
+        Volver al Menú
+      </button>
     </div>
   );
 }

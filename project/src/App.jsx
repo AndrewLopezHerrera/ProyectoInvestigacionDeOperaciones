@@ -11,6 +11,8 @@ import "./App.css";
 // Importar las páginas
 import ReemplazoEquipos from "./ReemplazoEquipos/ReemplazoEquipos";
 import MultiplicacionMatrices from "./MultiplicacionMatrices/MultiplicacionMatrices";
+import SeriesDeportivas from "./SeriesDeportivas/SeriesDeportivas";
+import ArbolesBinarios from "./ArbolesBinarios/ArbolesBinarios";
 
 // Página del menú principal
 function MenuPrincipal() {
@@ -132,6 +134,32 @@ function AnimatedRoutes() {
               </motion.div>
             }
           />
+            <Route
+              path="/series-deportivas"
+              element={
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <SeriesDeportivas />
+                </motion.div>
+              }
+            />
+            <Route
+              path="/arboles-binarios"
+              element={
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <ArbolesBinarios />
+                </motion.div>
+              }
+            />
         </Routes>
       </AnimatePresence>
     </div>

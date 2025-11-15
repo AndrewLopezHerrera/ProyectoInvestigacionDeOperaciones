@@ -1,0 +1,281 @@
+.series-page {
+  text-align: center;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: "Segoe UI", sans-serif;
+  color: #ffffff;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.fade-container {
+  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.mode-selection {
+  margin-bottom: 30px;
+}
+
+.mode-selection button {
+  margin: 0 10px;
+}
+
+.mode-container {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+}
+
+.form-group-n {
+  margin-bottom: 20px;
+}
+
+.form-group-n label {
+  margin-right: 10px;
+}
+
+.form-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.form-group input {
+  width: 100px;
+  padding: 5px;
+}
+
+.format-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.format-button {
+  padding: 10px 15px;
+  border: 2px solid #ccc;
+  background: #f0f0f0;
+  cursor: pointer;
+}
+
+.format-button.a-home {
+  border-color: #4caf50;
+  background: #e8f5e9;
+}
+
+.format-button.b-home {
+  border-color: #f44336;
+  background: #ffebee;
+}
+
+.calcular-boton {
+  padding: 15px 20px;
+  background-color: rgba(37, 99, 235, 0.9);
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+  backdrop-filter: blur(3px);
+}
+
+.result-container {
+  margin-top: 20px;
+  background: #eee;
+  color: #000;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.result-container p {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #0056b3;
+}
+
+.error-msg {
+  color: red;
+  font-weight: bold;
+}
+
+.calcular-boton:hover {
+  background-color: rgba(30, 64, 175, 0.95);
+  transform: scale(1.05);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.link-boton {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 14px;
+  padding: 30px 40px;
+  text-align: center;
+  color: #222;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  transform: scale(1);
+  transition: all 0.4s ease;
+}
+
+.modal-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.modal-fade-out {
+  animation: fadeOut 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.table-container {
+  margin-top: 15px;
+}
+
+.prob-table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.prob-table th,
+.prob-table td {
+  border: 1px solid #bbb;
+  padding: 6px 10px;
+  text-align: center;
+}
+
+.prob-table th {
+  background-color: #e5e7eb;
+  color: #111;
+}
+
+.prob-table td.win {
+  background-color: #d1fae5;
+}
+
+.prob-table td.loss {
+  background-color: #fee2e2;
+}
+
+.table-container {
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+  padding-top: 15px;
+}
+
+.prob-table {
+  width: auto;
+  margin: 10px auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.prob-table th,
+.prob-table td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: center;
+  min-width: 60px;
+}
+
+.prob-table thead th {
+  background-color: #f4f4f4;
+  color: #333;
+  font-weight: bold;
+}
+
+.prob-table tbody th {
+  background-color: #f9f9f9;
+  font-weight: bold;
+}
+
+.prob-table tbody tr:nth-child(even) {
+  background-color: #fcfcfc;
+}
+
+.prob-table td.win {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.prob-table td.loss {
+  background-color: #ffebee;
+  color: #c62828;
+  font-weight: bold;
+}
