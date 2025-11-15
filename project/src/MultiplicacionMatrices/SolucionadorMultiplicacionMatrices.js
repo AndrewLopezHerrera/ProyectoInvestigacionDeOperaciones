@@ -125,7 +125,6 @@ const IterarCadaK = (i, j) => {
     iteracionK.operaciones.push(operacion);
   }
   const indiceMinimo = costosParaK.indexOf(Math.min(...costosParaK));
-  console.log(indiceMinimo, iteracionK.operaciones.length);
   matrizGanadores[i][j] = iteracionK.operaciones[indiceMinimo].k;
   iteracionK.costoActual = Math.min(...costosParaK);
   iteracionesK.push(iteracionK);

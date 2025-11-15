@@ -175,7 +175,7 @@ const MultiplicacionMatrices = () => {
                   d<sub>{operacion.k}</sub> * 
                   d<sub>{iteracion.j}</sub>
                   ) = 
-                  {operacion.costoUno} + {operacion.costoDos} + ({operacion.d_i} * {operacion.d_k} * {operacion.d_j}) =
+                  {operacion.costoUno} + {operacion.costoDos} + ({operacion.d_i} * {operacion.d_k} * {operacion.d_j}) = 
                   {operacion.costoMinimo}
                 </p>
               </div>
